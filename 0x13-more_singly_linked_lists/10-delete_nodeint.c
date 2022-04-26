@@ -1,47 +1,60 @@
 #include "lists.h"
 
 /**
- * delete_nodeint_at_index - deletes the node at index
- * of a linked list.
- * @head: head of a list.
- * @index: index of the list where the node is
- * deleted.
+ * delete_nodeint_at_index -  deletes the node at index of a linked list
+ * @head: pointer to a struct
+ * @index: index given
  *
- * Return: 1 if it succeeded, -1 if it failed.
+ * Return: int
  */
 int delete_nodeint_at_index(listint_t **head, unsigned int index)
 {
-	unsigned int i;
-	listint_t *prev;
-	listint_t *next;
+	listint_t *temp = NULL;
+	listint_t *prev = NULL;
+	unsigned int i = 0;
 
-	prev = *head;
-
-	if (index != 0)
-	{
-		for (i = 0; i < index - 1 && prev != NULL; i++)
-		{
-			prev = prev->next;
-		}
-	}
-
-	if (prev == NULL || (prev->next == NULL && index != 0))
+	if (index > list_len(*head) || list_len(*head) == 0)
 	{
 		return (-1);
 	}
-
-	next = prev->next;
-
-	if (index != 0)
+	while (head != NULL)
 	{
-		prev->next = next->next;
-		free(next);
+		temp = *head;
+		if (i == index)
+		{
+			if (i == 0)
+			{
+				*head = temp->next;
+				free(temp);
+				return (1);
+			}
+			prev->next = temp->next;
+			free(temp);
+			return (1);
+		}
+		if ((i + 1) == index)
+			prev = *head;
+		head = &((*head)->next);
+		i++;
 	}
-	else
-	{
-		free(prev);
-		*head = next;
-	}
+	return (-1);
+}
 
-	return (1);
+/**
+ * list_len - prints number of nodes.
+ * @h: value of list
+ *
+ * Return: any data type list
+ */
+size_t list_len(const listint_t *h)
+{
+	const listint_t *temp = h;
+	unsigned int node = 0;
+
+	while (temp != NULL)
+	{
+		temp = temp->next;
+		node++;
+	}
+	return (node);
 }
